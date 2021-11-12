@@ -79,10 +79,12 @@ public class BingoCard {
     }
 
     public void markNumber(int number) {
-        for (int[] row : numbers){
-            for(int x : row){
-                if (x == number) {
-                    markedOff[row][x] = true; //TODO: FIX THIS SHIT
+        for (int i = 0; i < numbers.length; i++){
+            for (int j = 0; j < numbers[i].length; j++){
+                if (numbers[i][j] == number) {
+                    markedOff[i][j] = true;
+                } else {
+                    System.out.printf("Number %d not on this card", number);
                 }
             }
         }

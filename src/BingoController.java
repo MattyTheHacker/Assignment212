@@ -26,7 +26,7 @@ public class BingoController {
     private int currentRowSize;
     private int currentColumnSize;
 
-    ArrayList<BingoCard> cards = new ArrayList<BingoCard>();
+    ArrayList<BingoCard> cards = new ArrayList<>();
 
     public int getCurrentRowSize() {
         return this.currentRowSize;
@@ -150,23 +150,23 @@ public class BingoController {
      */
     public void setSeparator() {
         String sep = Toolkit.getInputForMessage("Enter the new separator");
-        /* TODO
-              make use of setNumberSeparator() and getNumberSeparator()
-         */
+        Defaults.setNumberSeparator(sep);
+        System.out.println("Separator is " + Defaults.getNumberSeparator());
     }
 
-    /* TODO
-         reset all BingoCards using resetMarked (to false)
-     */
     public void resetAllCards() {
-        //insert code here
+        for (BingoCard bc : cards){
+            bc.resetMarked();
+        }
     }
 
-    /* TODO
-          mark off a number that was called when it equals one of the numbers on the BingoCard
-     */
     public void markNumbers(int number) {
-        //insert code here
+        int count = 0;
+        for (BingoCard bc : cards){
+            System.out.printf("Checking card %d for %d", count, number);
+            bc.markNumber(number);
+            count ++;
+        }
     }
 
     /* TODO
