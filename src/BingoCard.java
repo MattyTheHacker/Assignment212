@@ -1,15 +1,6 @@
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class BingoCard {
-    /*
-      The two arrays are private and their structure is NEVER exposed to another
-      class, which is why the getCardNumbers returns a String that needs
-      further processing.
-
-      While this is not computationally efficient, it is good programming
-      practice to hide data structures (information hiding).
-     */
     private int[][] numbers;
     private boolean[][] markedOff;
 
@@ -47,52 +38,48 @@ public class BingoCard {
     }
 
     public String getCardNumbers() {
-    /* TODO
-        flatten the numbers array into a single string with each number separated by spaces but no leading or trailing copies of
-        that character: that is no spaces before the first number nor after the last number.
-     */
-
         StringBuilder sb = new StringBuilder();
-    /* TODO
-          all the cards are stored as a grid ([][] numbers) of rows / columns, so for example, numbers 3 4 5 6 will be
-          printed as follows:
-          3  4
-          5  6
-     */
-    /* TODO
-          return the grid as a string
-     */
-        return null;
+        for (int[] rows : numbers) {
+            for (int i : rows) {
+                sb.append(i);
+                sb.append(Defaults.getNumberSeparator());
+            }
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 
     public void setCardNumbers(String[] numbersAsStrings) {
-    /* TODO
-          the array of strings [] numbersAsStrings is cast to an integer as [] numbersList, for you
-          set the grid from this list
-     */
-        int[] numbersList =
-                Arrays.stream(numbersAsStrings).mapToInt(Integer::parseInt).toArray();
+        int[] numbersList = Arrays.stream(numbersAsStrings).mapToInt(Integer::parseInt).toArray();
 
-    /* TODO
-          the goal of this method is to get the numbers entered into the [][] numbers format
-     */
+        int r = 0;
+        int n = 0;
+        int count = 0;
+        for (int[] row : numbers) {
+            for (int ignored : row) {
+                numbers[r][n] = numbersList[count];
+                count++;
+                n++;
+            }
+            r++;
+            n = 0;
+        }
     }
 
     public void markNumber(int number) {
-        for (int i = 0; i < numbers.length; i++){
-            for (int j = 0; j < numbers[i].length; j++){
+        boolean found = false;
+        for (int i = 0; i < numbers.length; i++) {
+            for (int j = 0; j < numbers[i].length; j++) {
                 if (numbers[i][j] == number) {
                     markedOff[i][j] = true;
-                } else {
-                    System.out.printf("Number %d not on this card", number);
+                    System.out.printf("Marked off %d" + System.lineSeparator(), number);
+                    found = true;
                 }
             }
         }
-
-    /* TODO
-          make use of the [][] markedOff to mark off numbers from [][] numbers as they match
-          if not matching an appropriate message must be printed, verify against expected output files
-     */
+        if (!found) {
+            System.out.printf("Number %d not on this card" + System.lineSeparator(), number);
+        }
     }
 
     public boolean isWinner() {

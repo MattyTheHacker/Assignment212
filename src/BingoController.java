@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
@@ -18,13 +20,8 @@ public class BingoController {
     private final String OPTION_LIST_CARDS = "4";
     private final String OPTION_SIZE = "5";
 
-    /* TODO
-          complete default size of rows / columns as specified in the Defaults class
-          create an arraylist of BingoCard cards
-          include getters and setters for row / column sizes
-     */
-    private int currentRowSize;
-    private int currentColumnSize;
+    private int currentRowSize = Defaults.DEFAULT_NUMBER_OF_ROWS;
+    private int currentColumnSize = Defaults.DEFAULT_NUMBER_OF_COLUMNS;
 
     ArrayList<BingoCard> cards = new ArrayList<>();
 
@@ -45,36 +42,22 @@ public class BingoController {
     }
 
     public void addNewCard(BingoCard card) {
-        cards.add(new BingoCard(currentRowSize, currentColumnSize));
+        cards.add(card);
     }
 
-    /* TODO
-          include an appropriate message to the the number of rows as well as the number of columns
-          This method needs to be called from the main menu...
-     */
     public void setSize() {
         setCurrentRowSize(parseInt(Toolkit.getInputForMessage(
-                "")));
+                "Enter the number of rows for the card")));
         setCurrentColumnSize(parseInt(Toolkit.getInputForMessage(
-                "")));
+                "Enter the number of columns for the card")));
         System.out.printf("The bingo card size is set to %d rows X %d columns%n",
                 getCurrentRowSize(),
                 getCurrentColumnSize());
     }
 
-    /* TODO
-           ensure that the correct amount of numbers are entered
-           print a message that shows the numbers entered using Toolkit.printArray(numbers)
-           create, setCardNumbers and add the card as a BingoCard
-     */
     public void createCard() {
-        /* TODO
-              calculate how many numbers are required to be entered based on the number or rows / columns
-         */
-        int numbersRequired = 0;
-
+        int numbersRequired = getCurrentRowSize() * getCurrentColumnSize();
         String[] numbers;
-
         boolean correctAmountOfNumbersEntered;
 
         do {
@@ -86,101 +69,88 @@ public class BingoController {
                                     Defaults.getNumberSeparator()))
                     .trim()
                     .split(Defaults.getNumberSeparator());
-        /* TODO
-              verify if the correctAmountOfNumbersEntered is true or false dependant on the numbersRequired calculation
-         */
-            correctAmountOfNumbersEntered = false; //changes according to calculation inserted here
-
-        /* TODO
-              verify whether the numbers entered is not correct by printing an appropriate message
-              verify against the expected output files
-         */
-            //insert code here
+            try {
+                int[] ints = Arrays.stream(numbers).mapToInt(Integer::parseInt).toArray();
+                correctAmountOfNumbersEntered = ints.length == numbersRequired;
+                for (int i : ints) {
+                    if (i > 99 || i < 0) {
+                        correctAmountOfNumbersEntered = false;
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                correctAmountOfNumbersEntered = false;
+            }
+            if (!correctAmountOfNumbersEntered) {
+                System.out.printf("Try again: you entered %d numbers instead of %d" + System.lineSeparator(), numbers.length, numbersRequired);
+            }
         } while (!correctAmountOfNumbersEntered);
 
-        /* TODO
-              print an appropriate message using ToolKit.printArray() to show the numbers entered
-         */
-        System.out.println(); //insert code here
-        /* TODO
-              create new BingoCard
-         */
-        //insert code here
-        /* TODO
-              setCardNumbers for the new card
-         */
-        //insert code here
-        /* TODO
-              add the card to the ArrayList
-         */
-        //insert code here
+        System.out.print("You entered" + System.lineSeparator() + Toolkit.printArray(numbers) + System.lineSeparator());
+        BingoCard b = new BingoCard(currentRowSize, currentColumnSize);
+        b.setCardNumbers(numbers);
+        addNewCard(b);
     }
 
-    /* TODO
-         this method goes with printCardAsGrid() seen below
-         when option 4 is chosen to list existing cards it prints each card accordingly
-         for example, it should show the following
-         Card 0 numbers:
-         1  2
-         3  4 (check with expected output files)
-    */
     public void listCards() {
-        /* TODO
-              insert code here to find all cards to be printed accordingly
-         */
-        /* TODO
-              call printCardAsGrid() method here, Hint: use getCardNumbers() when getting cards
-         */
+        int count = 0;
+        for (BingoCard b : cards) {
+            System.out.printf("Card %2d numbers:" + System.lineSeparator(), count);
+            printCardAsGrid(b.getCardNumbers());
+            count++;
+        }
     }
 
-    /* TODO
-          this is for option 4, list existing cards where all the cards are printed as a grid
-          of rows / columns, so numbers 3 4 5 6 will be printed as follows:
-          3  4
-          5  6
-          it is a follow on method from listCards() and ensures that the grid structure is printed
-     */
     public void printCardAsGrid(String numbers) {
-        //insert code here to print numbers as a grid
+        String[] numberArray = numbers.split(Defaults.getNumberSeparator());
+        List<Integer> numberListAsInts = new ArrayList<>();
+        for (String s : numberArray) {
+            numberListAsInts.add(Integer.parseInt(s));
+        }
+
+        int count = 0;
+        for (Integer numberListAsInt : numberListAsInts) {
+            if (count != currentColumnSize - 1) {
+                System.out.printf("%2d" + Defaults.getNumberSeparator(), numberListAsInt);
+                count++;
+            } else {
+                System.out.printf("%2d", numberListAsInt);
+                System.out.print(System.lineSeparator());
+                count = 0;
+            }
+        }
     }
 
-    /* TODO
-          use Toolkit.getInputForMessage to enter a new separator
-          print a message what the new separator is
-     */
     public void setSeparator() {
         String sep = Toolkit.getInputForMessage("Enter the new separator");
         Defaults.setNumberSeparator(sep);
-        System.out.println("Separator is " + Defaults.getNumberSeparator());
+        System.out.println("Separator is '" + Defaults.getNumberSeparator() + "'");
     }
 
     public void resetAllCards() {
-        for (BingoCard bc : cards){
+        for (BingoCard bc : cards) {
             bc.resetMarked();
         }
     }
 
     public void markNumbers(int number) {
         int count = 0;
-        for (BingoCard bc : cards){
-            System.out.printf("Checking card %d for %d", count, number);
+        for (BingoCard bc : cards) {
+            System.out.printf("Checking card %d for %d" + System.lineSeparator(), count, number);
             bc.markNumber(number);
-            count ++;
+            count++;
         }
     }
 
-    /* TODO
-          make use of isWinner() to determine who the winner is
-          the method should return the index of who the winner is
-     */
     public int getWinnerId() {
-        //insert code here
-        return 0;
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).isWinner()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
-    /* TODO
-          please take note that the game will not end until there is a winning sequence
-     */
     public void play() {
         System.out.println("Eyes down, look in!");
         resetAllCards();
@@ -199,24 +169,24 @@ public class BingoController {
     }
 
     public String getMenu(String[] menuItems) {
-    /* TODO
-        change this method so it prints a proper numbered menu
-        analyse the correct format from the ExpectedOutput files
-        menuText is returned
-     */
         StringBuilder menuText = new StringBuilder();
+        final String[] mainMenuNumbers = {OPTION_EXIT,
+                OPTION_PLAY,
+                OPTION_SEPARATOR,
+                OPTION_CREATE_CARD,
+                OPTION_LIST_CARDS,
+                OPTION_SIZE};
 
-        for (String s : menuItems) {
-            menuText.append(s);
+        for (int i = 0; i < menuItems.length; i++) {
+            menuText.append(" ");
+            menuText.append(mainMenuNumbers[i]);
+            menuText.append(": ");
+            menuText.append(menuItems[i]);
             menuText.append(System.lineSeparator());
         }
-
         return menuText.toString();
     }
 
-    /* TODO
-          complete the menu using switch to call the appropriate method calls
-     */
     public void run() {
         boolean finished = false;
         do {
