@@ -22,7 +22,7 @@ public class BingoCard {
     }
 
     public int getNumberOfRows() {
-        return this.numberOfRows;
+        return numberOfRows;
     }
 
     public void setNumberOfRows(int numberOfRows) {
@@ -30,7 +30,7 @@ public class BingoCard {
     }
 
     public int getNumberOfColumns() {
-        return this.numberOfColumns;
+        return numberOfColumns;
     }
 
     public void setNumberOfColumns(int numberOfColumns) {

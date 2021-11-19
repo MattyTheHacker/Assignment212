@@ -110,13 +110,13 @@ public class BingoController {
 
         int count = 0;
         for (Integer numberListAsInt : numberListAsInts) {
-            if (count != currentColumnSize - 1) {
-                System.out.printf("%2d" + Defaults.getNumberSeparator(), numberListAsInt);
-                count++;
-            } else {
-                System.out.printf("%2d", numberListAsInt);
-                System.out.print(System.lineSeparator());
-                count = 0;
+            if (count != currentColumnSize - 1) { // are we at the end of the row? No? do this...
+                System.out.printf("%2d" + Defaults.getNumberSeparator(), numberListAsInt); //print the number with the comma
+                count++; // increment the count to indicate moving to the next column
+            } else { // are we at the end of the row? Yes? do this...
+                System.out.printf("%2d", numberListAsInt); // print the number but without a comma
+                System.out.print(System.lineSeparator()); // add a new line
+                count = 0; // reset count to 0 for new row
             }
         }
     }
