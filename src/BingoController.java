@@ -26,7 +26,7 @@ public class BingoController {
     ArrayList<BingoCard> cards = new ArrayList<>();
 
     public int getCurrentRowSize() {
-        return this.currentRowSize;
+        return currentRowSize;
     }
 
     public void setCurrentRowSize(int currentRowSize) {
@@ -34,7 +34,7 @@ public class BingoController {
     }
 
     public int getCurrentColumnSize() {
-        return this.currentColumnSize;
+        return currentColumnSize;
     }
 
     public void setCurrentColumnSize(int currentColumnSize) {
