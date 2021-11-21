@@ -191,22 +191,22 @@ public class BingoController {
         boolean finished = false;
         do {
             switch (Toolkit.getInputForMessage(getMenu(mainMenuItems))) {
-                case "0":
+                case OPTION_EXIT:
                     finished = true;
                     break;
-                case "1":
+                case OPTION_PLAY:
                     play();
                     break;
-                case "2":
+                case OPTION_SEPARATOR:
                     setSeparator();
                     break;
-                case "3":
+                case OPTION_CREATE_CARD:
                     createCard();
                     break;
-                case "4":
+                case OPTION_LIST_CARDS:
                     listCards();
                     break;
-                case "5":
+                case OPTION_SIZE:
                     setSize();
                     break;
                 default:
