@@ -7,7 +7,15 @@ public class Toolkit {
 
     public static String getInputForMessage(String message) {
         System.out.println(message);
-        return stdIn.nextLine();
+        return stdIn.nextLine().trim();
+
+//        String str = stdIn.nextLine();
+//        str = str.strip();
+//        if (str.isEmpty()) {
+//            return stdIn.nextLine();
+//        } else {
+//            return stdIn.nextLine().trim();
+//        }
     }
 
     public static String printArray(String[] array) {
